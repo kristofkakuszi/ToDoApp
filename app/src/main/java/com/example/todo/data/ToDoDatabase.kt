@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.example.todo.data.models.ToDoData
 
 @Database(entities = [ToDoData::class], version = 1, exportSchema = false) //ezzel mondjuk meg a roomnak hogy ez egy db lesz
-@TypeConverters(Converter::class)
+@TypeConverters(Converter::class) //ezzel huzzuk be a convertert
 abstract class ToDoDatabase : RoomDatabase() { //kell az abstract és az örököltetés a roomdb-bol
 
     abstract fun toDoDao(): ToDoDao //visszaadja a toDoDao-t

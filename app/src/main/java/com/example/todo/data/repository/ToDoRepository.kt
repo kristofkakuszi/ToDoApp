@@ -6,11 +6,15 @@ import com.example.todo.data.models.ToDoData
 
 class ToDoRepository(private val toDoDao : ToDoDao) {
 
-    val getAllData: LiveData<List<ToDoData>> = toDoDao.getAllData()
+    val getAllData: LiveData<List<ToDoData>> = toDoDao.getAllData() //az osszes adatot eltaroljuk a toDoDao-bol itt
 
     suspend fun insertData(todoData: ToDoData){
         toDoDao.insertData(todoData)
 
     }
+
+    /**
+     * a repository  azt csinalja hogy
+     */
 
 }
