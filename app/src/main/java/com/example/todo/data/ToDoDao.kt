@@ -1,10 +1,7 @@
 package com.example.todo.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.example.todo.data.models.ToDoData
 
 @Dao //dao felelős azért hogy bizonyos db-beli fgv-ket megtaláljon ezek többnyire sql-lekérdezéseket fognak tartalmazni ez a dao egy interface
@@ -18,4 +15,13 @@ interface ToDoDao {
 
     //suspend coroutineshez tartozik ami szalkezeles tema
     //it is always a good practice to use coroutines for all your database queryes
+
+    @Update
+    suspend fun updateData(toDoData: ToDoData)
+
+    @Delete
+    suspend fun deleteItem(toDoData: ToDoData)  //first csing -> ToDoRepository
+
+    @Query("DELETE FROM todo_table")
+    suspend fun deleteAll()
 }

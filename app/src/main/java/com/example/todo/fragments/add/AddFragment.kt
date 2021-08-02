@@ -11,6 +11,8 @@ import com.example.todo.R
 import com.example.todo.data.models.ToDoData
 import com.example.todo.data.viewmodel.ToDoViewModel
 import com.example.todo.fragments.SharedViewModel
+import kotlinx.android.synthetic.main.fragment_add.*
+import kotlinx.android.synthetic.main.fragment_add.view.*
 
 class AddFragment : Fragment() {
 
