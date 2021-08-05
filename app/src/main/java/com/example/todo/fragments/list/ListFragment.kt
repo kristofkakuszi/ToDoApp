@@ -1,6 +1,7 @@
 package com.example.todo.fragments.list
 
 import android.app.AlertDialog
+import android.app.Fragment
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
@@ -12,8 +13,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todo.R
 import com.example.todo.data.viewmodel.ToDoViewModel
+import com.example.todo.databinding.FragmentListBinding
 import com.example.todo.fragments.SharedViewModel
-import kotlinx.android.synthetic.main.fragment_list.view.*
+
 
 
 class ListFragment : Fragment() {
@@ -21,39 +23,48 @@ class ListFragment : Fragment() {
     private val mToDoViewModel: ToDoViewModel by viewModels()
     private val mSharedViewModel: SharedViewModel by viewModels()
 
+    private var _binding: FragmentListBinding? = null      //BindingAdapters miatt
+    private val binding get() = _binding!!                  //BindingAdapters miatt
+
     private val adapter: ListAdapter by lazy { ListAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_list, container, false)
+    ): View {
 
-        val recyclerView = view.recyclerView
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+        _binding = FragmentListBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.mSharedViewModel = mSharedViewModel
+
+        setupRecyclerview()
 
         mToDoViewModel.getAllData.observe(viewLifecycleOwner, Observer { data ->  //gondolom azert kell observe itt mert by viewModels()-el lett meghivva
             mSharedViewModel.checkIfDatabaseEmpty(data)
             adapter.setData(data)
+            binding.recyclerView.scheduleLayoutAnimation()
         })
 
+        /*
         mSharedViewModel.emptyDatabase.observe(viewLifecycleOwner, Observer {
             showEmptyDatabase(it)
         })
 
-        view.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_addFragment)
-        }
+         */
 
+        setHasOptionsMenu(true)                         //set menu
 
-        //set menu
-        setHasOptionsMenu(true)
-
-        return view
+        return binding.root                             //return view helyett BindingAdapters miatt
     }
 
+
+    private fun setupRecyclerview(){
+        val recyclerView = binding.recyclerView
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+    }
+
+    /*
     private fun showEmptyDatabase(emptyDatabase : Boolean) {
         if(emptyDatabase){
             view?.no_data_imageView?.visibility = View.VISIBLE
@@ -63,6 +74,7 @@ class ListFragment : Fragment() {
             view?.no_data_textView?.visibility = View.INVISIBLE
         }
     }
+     */
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_fragment_menu,menu)
@@ -91,5 +103,10 @@ class ListFragment : Fragment() {
         builder.setTitle("Delete Everything?")
         builder.setMessage("Are you sure you want to remove everything?")
         builder.create().show()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null //this way we can avoid memory leaks
     }
 }

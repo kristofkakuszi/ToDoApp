@@ -10,27 +10,29 @@ import androidx.navigation.fragment.findNavController
 import com.example.todo.R
 import com.example.todo.data.models.ToDoData
 import com.example.todo.data.viewmodel.ToDoViewModel
+import com.example.todo.databinding.FragmentAddBinding
 import com.example.todo.fragments.SharedViewModel
-import kotlinx.android.synthetic.main.fragment_add.*
-import kotlinx.android.synthetic.main.fragment_add.view.*
 
 class AddFragment : Fragment() {
 
     private val mToDoViewModel: ToDoViewModel by viewModels() //ezek egy objektummodellek. Ezek alapjan tudom majd az osztalyban levo dolgokat elerni
     private val mSharedViewModel : SharedViewModel by viewModels()
 
+    private var _binding: FragmentAddBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_add, container, false)
+        _binding  = FragmentAddBinding.inflate(layoutInflater, container, false)
 
         setHasOptionsMenu(true)
 
-        view.priorities_spinner.onItemSelectedListener = mSharedViewModel.listener
+        binding.prioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener
 
-        return view
+        return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
